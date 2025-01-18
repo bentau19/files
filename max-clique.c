@@ -70,12 +70,13 @@ signed char n, signed char *clique, signed char k, signed char start,
     }
 
     for (int i = start; i < n; i++) {
-        // if(deg[i]>=k-1){
-        printf("deg %d is %d \n",i,deg[i]);
+
+        if(deg[i]>=k-1){
+        printf("deg %d is %d while k is %d \n",i,deg[i],k);
         clique[currentSize] = i;
-        printf("Calling");
+        printf("Calling\n");
         generateCombinations(graph, n, clique, k, i + 1, currentSize + 1, maxSize, maxClique, flag,deg);
-        // }
+        }
         if(*flag)return;
       }
 }
