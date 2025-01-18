@@ -24,40 +24,19 @@ bool isClique(bool graph[MAX_VERTICES][MAX_VERTICES], signed char clique[], sign
     return true;
 }
 
-// void generateCombinations( bool graph[MAX_VERTICES][MAX_VERTICES], 
-// signed char n, signed char *clique, signed char k, signed char start,
-//  signed char currentSize, signed char *maxSize, signed char *maxClique,bool *flag,signed char deg[]) {
-//          if (currentSize == k) {
-//         if (isClique(graph, clique, k)) {
-//             if (k > *maxSize) {
-//                 *maxSize = k;
-//                 for (int i = 0; i < k; i++) {
-//                     maxClique[i] = clique[i];
-//                 }
-//             }
-//         }
-//         return;
-//     }
-
-//     for (int i = start; i < n; i++) {
-//         clique[currentSize] = i;
-//         generateCombinations(graph, n, clique, k, i + 1, currentSize + 1, maxSize, maxClique,flag,deg);
-//     }
-// }
-
 
 void generateCombinations( bool graph[MAX_VERTICES][MAX_VERTICES], 
 signed char n, signed char *clique, signed char k, signed char start,
  signed char currentSize, signed char *maxSize, signed char *maxClique,bool *flag,signed char deg[]) {
-    printf("testing {");
-    for(int i = 0; i < currentSize; i++){
-        printf("%d ",clique[i]);
-    }
-    printf("}\n");
-    if(*flag)return;
+    // printf("testing {");
+    // for(int i = 0; i < currentSize; i++){
+    //     printf("%d ",clique[i]);
+    // }
+    // printf("}\n");
+     if(*flag)return;
     if (currentSize == k) {
         if (isClique(graph, clique, k)) {
-            printf("find!!\n");
+            // printf("find!!\n");
             *flag=true;
             if (k > *maxSize) {
                 *maxSize = k;
@@ -68,64 +47,19 @@ signed char n, signed char *clique, signed char k, signed char start,
         }
         return;
     }
-
+    signed char t = k-1;
     for (int i = start; i < n; i++) {
-
-        if(deg[i]>=k-1){
-        printf("deg %d is %d while k is %d \n",i,deg[i],k);
+        if(k>(n-i)+currentSize)return;
+        // printf("deg %d is %d while k is %d \n",i,deg[i],k);
+        if(deg[i]>=t){
+        // printf("deg %d is %d while k is %d \n",i,deg[i],k);
         clique[currentSize] = i;
-        printf("Calling\n");
+        // printf("Calling\n");
         generateCombinations(graph, n, clique, k, i + 1, currentSize + 1, maxSize, maxClique, flag,deg);
+    //    if(*flag)return;
         }
-        if(*flag)return;
       }
 }
-
-
-
-
-// void generateCombinations(bool graph[MAX_VERTICES][MAX_VERTICES],
-//  int n, signed char *clique, signed char k,
-//    signed char *maxSize, signed char *maxClique) {
-
-//     for (signed char i = 0; i < k; i++) {
-//         clique[i] = i;
-//     }
-//     while (1) {
-//         // Print the current combination
-//         if (isClique(graph, clique, k)) {
-//             if (k > *maxSize) {
-//                 *maxSize = k;
-//                 for (signed char i = 0; i < k; i++) {
-//                     maxClique[i] = clique[i];
-//                 }
-//             } 
-//             return;
-//         }
-        
-//         // Find the rightmost element that can be incremented
-//         signed char i;
-//         for (i = k - 1; i >= 0; i--) {
-//             if (clique[i] < n - (k - 1) + i) {
-//                 break;
-//             }
-//         }
-
-//         // If no element can be incremented, we're done
-//         if (i < 0) {
-//             break;
-//         }
-
-//         // Increment this element and update the subsequent elements
-//         clique[i]++; 
-   
-//         for (signed char j = i + 1; j < k; j++) {
-//             clique[j] = clique[j - 1] + 1;
-//         }
-
-//     }
-// }
-
 
 
 //todo:
@@ -154,8 +88,9 @@ void findMaxClique(int graph[MAX_VERTICES][MAX_VERTICES], int n) {
 
 int left = 0, right = n;
  while (left <= right) {
-    bool flag=false;
-        int k = left + (right - left) / 2;
+        bool flag=false;
+        int k = left + ((right - left) >>1);
+        // printf("k is %d now!\n",k);
         generateCombinations(optGraph, n, clique, k, 0, 0, &maxSize, maxClique,&flag,deg);
      
         if (flag) {
