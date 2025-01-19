@@ -19,16 +19,13 @@ void printSolution(signed char vertices[], signed char size) {
 }
 
 bool isClique(bool graph[MAX_VERTICES][MAX_VERTICES], signed char clique[], signed char size) {
-    for (signed char i = 0; i < size; i++) {
-        signed char curi = clique[i];
-        for (signed char j = i+1; j < size; j++) {
+        signed char curi = clique[size-1];
+        for (signed char j = 0; j < size-1; j++) {
             signed char curj=clique[j];
             if (!(graph[curi][curj])) {
                 return false;
             }
-        }
     }
-
     return true;
 }
 
@@ -67,8 +64,8 @@ signed char n, signed char *clique, signed char k, signed char start,
 //todo:
 //make it loop rolling
 void initGraph(int graph[MAX_VERTICES][MAX_VERTICES],bool optGraph[MAX_VERTICES][MAX_VERTICES],signed char n,signed char deg[]){
-    for (signed char row = 0; row < n; row++) {
-        for (signed char colm = row+1; colm < n; colm++) { 
+    for (signed char row = 1; row < n; row++) {
+        for (signed char colm = 0; colm < row; colm++) { 
             bool t = graph[row][colm] | graph[colm][row];
             if(t){
                 optGraph[row][colm] = t;
@@ -87,7 +84,7 @@ void findMaxClique(int graph[MAX_VERTICES][MAX_VERTICES], int n) {
     signed char maxSize = 0;
     bool optGraph [MAX_VERTICES][MAX_VERTICES];
     initGraph(graph,optGraph,n,deg);
-
+    
 int left = 0, right = n;
  while (left <= right) {
         int k = left + ((right - left) >>1);
