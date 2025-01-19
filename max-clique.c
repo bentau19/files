@@ -28,6 +28,7 @@ bool isClique(bool graph[MAX_VERTICES][MAX_VERTICES], signed char clique[], sign
             }
         }
     }
+
     return true;
 }
 
@@ -35,8 +36,11 @@ bool isClique(bool graph[MAX_VERTICES][MAX_VERTICES], signed char clique[], sign
 bool generateCombinations( bool graph[MAX_VERTICES][MAX_VERTICES], 
 signed char n, signed char *clique, signed char k, signed char start,
  signed char currentSize, signed char *maxSize, signed char *maxClique,signed char deg[]) {
+        if (!isClique(graph, clique, currentSize)) {
+            return false;
+        }
+        
     if (currentSize == k) {
-        if (isClique(graph, clique, k)) {
             if (k > *maxSize) {
                 *maxSize = k;
                 for (int i = 0; i < k; i++) {
@@ -45,8 +49,7 @@ signed char n, signed char *clique, signed char k, signed char start,
             }
             return true;
         }
-        return false;
-    }
+    
     signed char t = k-2;
     signed char t2 = currentSize+n;
     for (int i = start; i < n; i++) {
@@ -90,9 +93,9 @@ int left = 0, right = n;
         int k = left + ((right - left) >>1);
         bool flag = generateCombinations(optGraph, n, clique, k, 0, 0, &maxSize, maxClique,deg);
         if (flag) {
-            left = k + 1; // Move the left pointer to find the last true
+            left = k + 1; 
         } else {
-            right = k - 1; // Move the right pointer to search in the left half
+            right = k - 1; 
         }
     }
 
