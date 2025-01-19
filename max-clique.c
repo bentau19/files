@@ -6,7 +6,7 @@
 
 void printSolution(signed char vertices[], signed char size) {
     signed char gap =size%4;
-    for (signed char i = 0; i < size%4; i++){
+    for (signed char i = 0; i < gap; i++){
         printf("%d ", vertices[i]);
     }
     for (signed char i = gap; i < size; i+=4) {
@@ -19,12 +19,21 @@ void printSolution(signed char vertices[], signed char size) {
 }
 
 bool isClique(bool graph[MAX_VERTICES][MAX_VERTICES], signed char clique[], signed char size) {
-        signed char curi = clique[size-1];
-        for (signed char j = 0; j < size-1; j++) {
-            signed char curj=clique[j];
-            if (!(graph[curi][curj])) {
+        signed char newSize =size-1;
+        bool left =newSize%2;
+        signed char curi = clique[newSize];
+        
+        if(newSize>0&&left){
+            if (!(graph[curi][clique[0]])) {
                 return false;
             }
+        }
+        if(newSize>1){
+        for (signed char j = left; j < newSize; j=j+2) {
+            if (!(graph[curi][clique[j]])||!(graph[curi][clique[j+1]])) {
+                return false;
+            }
+    }
     }
     return true;
 }
@@ -40,8 +49,11 @@ signed char n, signed char *clique, signed char k, signed char start,
     if (currentSize == k) {
             if (k > *maxSize) {
                 *maxSize = k;
-                for (int i = 0; i < k; i++) {
+                bool left = k%2;
+                if(left)maxClique[0] = clique[0];
+                for (signed char i = left; i < k; i=i+2) {
                     maxClique[i] = clique[i];
+                    maxClique[i+1] = clique[i+1];
                 }
             }
             return true;
@@ -49,7 +61,7 @@ signed char n, signed char *clique, signed char k, signed char start,
     
     signed char t = k-2;
     signed char t2 = currentSize+n;
-    for (int i = start; i < n; i++) {
+    for (signed char i = start; i < n; i++) {
         if(k>t2-i)return false;
         if(deg[i]>t){
         clique[currentSize] = i;
@@ -61,8 +73,6 @@ signed char n, signed char *clique, signed char k, signed char start,
 }
 
 
-//todo:
-//make it loop rolling
 void initGraph(int graph[MAX_VERTICES][MAX_VERTICES],bool optGraph[MAX_VERTICES][MAX_VERTICES],signed char n,signed char deg[]){
     for (signed char row = 1; row < n; row++) {
         for (signed char colm = 0; colm < row; colm++) { 
@@ -87,7 +97,7 @@ void findMaxClique(int graph[MAX_VERTICES][MAX_VERTICES], int n) {
     
 int left = 0, right = n;
  while (left <= right) {
-        int k = left + ((right - left) >>1);
+        unsigned char k = ((right + left) >>1);
         bool flag = generateCombinations(optGraph, n, clique, k, 0, 0, &maxSize, maxClique,deg);
         if (flag) {
             left = k + 1; 
